@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:movye/constants/screen_name.dart';
 
+import '../constants/app_constants.dart';
 import '../services/app_manage.dart';
 
 class AppNavigatorControllers {
@@ -11,6 +11,13 @@ class AppNavigatorControllers {
   static Future? moveToMainHome() {
     return AppManage.mainNavigatorService.pushNamedAndRemoveUntil(
       ScreenName.homeScreen,
+    );
+  }
+
+  static Future? moveToSearchScreen({required String keyWord}) {
+    return AppManage.mainNavigatorService.pushNamedAndRemoveUntil(
+      ScreenName.searchScreen,
+      arguments: keyWord,
     );
   }
 }

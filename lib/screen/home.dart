@@ -2,9 +2,10 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:movye/constants/assets.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../bloc/home_screen_bloc.dart';
+import '../bloc/home_screen/home_screen_bloc.dart';
 import '../common/appbar.dart';
 import '../common/network_image.dart';
 import '../constants/app_constants.dart';
@@ -71,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _gridViewFilm(
     String title,
     List<FilmModel>? listFilm,
-    bool isShowMore,
+    bool isExpand,
     int page,
   ) {
     return Column(
@@ -90,11 +91,11 @@ class _HomeScreenState extends State<HomeScreen> {
             crossAxisCount: 3,
             physics: const NeverScrollableScrollPhysics(),
             crossAxisSpacing: 4.sp,
-            mainAxisSpacing: 4.sp,
-            childAspectRatio: 0.4.sp,
+            mainAxisSpacing: 6.sp,
+            childAspectRatio: 0.38.sp,
             children: listFilm != null
                 ? List.generate(
-                    isShowMore ? listFilm.length : 6,
+                    isExpand ? listFilm.length : 6,
                     (index) {
                       final film = listFilm[index];
                       String urlImg = AppConstants.apiFilmImg + film.posterUrl;
@@ -117,7 +118,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             child: Text(
                               film.name,
-                              style: const TextStyle(fontSize: 16.0),
+                              style: TextStyle(fontSize: 14.sp),
                               overflow: TextOverflow.ellipsis,
                               maxLines: 2,
                             ),
@@ -169,7 +170,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         GestureDetector(
           onTap: () {
-            homeBloc.add(ShowMoreFilmList(isShowMore: !isShowMore, page: page));
+            homeBloc.add(ShowMoreFilmList(isExpand: !isExpand, page: page));
           },
           child: Container(
             margin: EdgeInsets.symmetric(horizontal: 16.sp),
@@ -182,7 +183,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             child: Center(
               child: Text(
-                isShowMore ? StringConstants.zoomOut : StringConstants.expand,
+                isExpand ? StringConstants.zoomOut : StringConstants.expand,
               ),
             ),
           ),
@@ -200,15 +201,95 @@ class _HomeScreenState extends State<HomeScreen> {
         builder: (context, state) {
           return Scaffold(
             appBar: MyAppBar(
-              children: Center(
-                child: Text(
-                  StringConstants.homeTitle,
-                  style: TextStyle(
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
+              child: state.isSearching
+                  ? Row(
+                      children: [
+                        Image.asset(
+                          Assets.assetsAppFilmRoll,
+                        ),
+                        SizedBox(
+                          width: 4.sp,
+                        ),
+                        Expanded(
+                          child: TextField(
+                            onSubmitted: (value) {
+                              homeBloc.add(SubmitSearch(keyword: value));
+                            },
+                            autofocus: true,
+                            maxLines: 1,
+                            cursorColor: Colors.black,
+                            decoration: InputDecoration(
+                              contentPadding: EdgeInsets.symmetric(
+                                vertical: 8.sp,
+                                horizontal: 10.sp,
+                              ),
+                              hintText: StringConstants.keyWord,
+                              hintStyle: TextStyle(
+                                fontSize: 14.sp,
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8.sp),
+                                borderSide: const BorderSide(
+                                  color: Colors.black,
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8.sp),
+                                borderSide: BorderSide(
+                                  color: Colors.black,
+                                  width: 1.5.sp,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 4.sp,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            homeBloc.add(const ShowSearch(isSearching: false));
+                          },
+                          child: Icon(
+                            Icons.close,
+                            color: Colors.black,
+                            size: 20.sp,
+                          ),
+                        )
+                      ],
+                    )
+                  : Stack(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Image.asset(
+                              Assets.assetsAppFilmRoll,
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                homeBloc
+                                    .add(const ShowSearch(isSearching: true));
+                              },
+                              child: Icon(
+                                Icons.search,
+                                color: Colors.black,
+                                size: 20.sp,
+                              ),
+                            )
+                          ],
+                        ),
+                        Center(
+                          child: Text(
+                            StringConstants.homeTitle,
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
             ),
             body: SingleChildScrollView(
               child: Column(
@@ -253,7 +334,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                                 child: Text(
                                   film.name,
-                                  style: const TextStyle(fontSize: 16.0),
+                                  style: TextStyle(fontSize: 14.sp),
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 2,
                                 ),
@@ -306,28 +387,28 @@ class _HomeScreenState extends State<HomeScreen> {
                   _gridViewFilm(
                     StringConstants.singleFilm,
                     state.singleFilmList,
-                    state.isShowMoreSingleFilm,
+                    state.isExpandSingleFilm,
                     1,
                   ),
 
                   _gridViewFilm(
                     StringConstants.series,
                     state.seriesFilmList,
-                    state.isShowMoreSeriesFilm,
+                    state.isExpandSeriesFilm,
                     2,
                   ),
 
                   _gridViewFilm(
                     StringConstants.cartoon,
                     state.cartoonList,
-                    state.isShowMoreCartoon,
+                    state.isExpandCartoon,
                     3,
                   ),
 
                   _gridViewFilm(
                     StringConstants.shows,
                     state.tvShowsList,
-                    state.isShowMoreTVShows,
+                    state.isExpandTVShows,
                     4,
                   ),
                   SizedBox(
