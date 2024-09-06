@@ -7,10 +7,11 @@ class HomeScreenState extends Equatable {
     this.seriesFilmList,
     this.cartoonList,
     this.tvShowsList,
-    this.isShowMoreSingleFilm = false,
-    this.isShowMoreSeriesFilm = false,
-    this.isShowMoreCartoon = false,
-    this.isShowMoreTVShows = false,
+    this.isExpandSingleFilm = false,
+    this.isExpandSeriesFilm = false,
+    this.isExpandCartoon = false,
+    this.isExpandTVShows = false,
+    this.isSearching = false,
   });
 
   final List<FilmModel>? newestFilmList;
@@ -18,10 +19,11 @@ class HomeScreenState extends Equatable {
   final List<FilmModel>? seriesFilmList;
   final List<FilmModel>? cartoonList;
   final List<FilmModel>? tvShowsList;
-  final bool isShowMoreSingleFilm;
-  final bool isShowMoreSeriesFilm;
-  final bool isShowMoreCartoon;
-  final bool isShowMoreTVShows;
+  final bool isExpandSingleFilm;
+  final bool isExpandSeriesFilm;
+  final bool isExpandCartoon;
+  final bool isExpandTVShows;
+  final bool isSearching;
 
   HomeScreenState copyWith({
     List<FilmModel>? newestFilmList,
@@ -29,10 +31,11 @@ class HomeScreenState extends Equatable {
     List<FilmModel>? seriesFilmList,
     List<FilmModel>? cartoonList,
     List<FilmModel>? tvShowsList,
-    bool? isShowMoreSingleFilm,
-    bool? isShowMoreSeriesFilm,
-    bool? isShowMoreCartoon,
-    bool? isShowMoreTVShows,
+    bool? isExpandSingleFilm,
+    bool? isExpandSeriesFilm,
+    bool? isExpandCartoon,
+    bool? isExpandTVShows,
+    bool? isSearching,
   }) {
     return HomeScreenState(
       newestFilmList: newestFilmList ?? this.newestFilmList,
@@ -40,10 +43,11 @@ class HomeScreenState extends Equatable {
       seriesFilmList: seriesFilmList ?? this.seriesFilmList,
       cartoonList: cartoonList ?? this.cartoonList,
       tvShowsList: tvShowsList ?? this.tvShowsList,
-      isShowMoreSingleFilm: isShowMoreSingleFilm ?? this.isShowMoreSingleFilm,
-      isShowMoreSeriesFilm: isShowMoreSeriesFilm ?? this.isShowMoreSeriesFilm,
-      isShowMoreCartoon: isShowMoreCartoon ?? this.isShowMoreCartoon,
-      isShowMoreTVShows: isShowMoreTVShows ?? this.isShowMoreTVShows,
+      isExpandSingleFilm: isExpandSingleFilm ?? this.isExpandSingleFilm,
+      isExpandSeriesFilm: isExpandSeriesFilm ?? this.isExpandSeriesFilm,
+      isExpandCartoon: isExpandCartoon ?? this.isExpandCartoon,
+      isExpandTVShows: isExpandTVShows ?? this.isExpandTVShows,
+      isSearching: isSearching ?? this.isSearching,
     );
   }
 
@@ -54,9 +58,10 @@ class HomeScreenState extends Equatable {
         seriesFilmList,
         cartoonList,
         tvShowsList,
-        isShowMoreSingleFilm,
-        isShowMoreSeriesFilm,
-        isShowMoreCartoon,
-        isShowMoreTVShows,
+        isExpandSingleFilm,
+        isExpandSeriesFilm,
+        isExpandCartoon,
+        isExpandTVShows,
+        isSearching,
       ];
 }

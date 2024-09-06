@@ -30,4 +30,10 @@ class StringConstants {
   static const String shows = "TV Shows";
   static const String expand = "Mở rộng";
   static const String zoomOut = "Thu nhỏ";
+  static const String keyWord = "Từ khoá";
+}
+
+class ScreenName {
+  static const homeScreen = 'HomeScreen';
+  static const searchScreen = 'SearchSreen';
 }

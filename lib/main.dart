@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:movye/constants/app_constants.dart';
-import 'package:movye/constants/screen_name.dart';
 
 import 'route/routes.dart';
 import 'services/app_manage.dart';
