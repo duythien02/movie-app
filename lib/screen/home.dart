@@ -91,7 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
             crossAxisCount: 3,
             physics: const NeverScrollableScrollPhysics(),
             crossAxisSpacing: 4.sp,
-            mainAxisSpacing: 6.sp,
+            mainAxisSpacing: 8.sp,
             childAspectRatio: 0.38.sp,
             children: listFilm != null
                 ? List.generate(
