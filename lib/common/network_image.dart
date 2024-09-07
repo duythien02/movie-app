@@ -3,14 +3,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shimmer/shimmer.dart';
 
 class MyNetworkImage extends StatelessWidget {
-  const MyNetworkImage({super.key, required this.url, required this.radius});
+  const MyNetworkImage({super.key, required this.url, this.radius});
   final String url;
-  final BorderRadius radius;
+  final BorderRadius? radius;
 
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: radius,
+      borderRadius: radius == null ? BorderRadius.zero : radius!,
       child: Image(
         fit: BoxFit.cover,
         image: NetworkImage(

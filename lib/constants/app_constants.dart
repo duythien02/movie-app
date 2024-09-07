@@ -18,10 +18,13 @@ class EndpointApi {
   static const String getListCartoon = 'v1/api/danh-sach/hoat-hinh';
   // danh sách TV shows
   static const String getListTvShows = 'v1/api/danh-sach/tv-shows';
+  //search
+  static const String getListSearch = 'v1/api/tim-kiem';
 }
 
 class StringConstants {
   static const String homeTitle = 'Trang chủ';
+  static const String favouriteTitle = 'Phim yêu thích';
   static const String newestFilm = "Phim mới cập nhật";
   static const String sliderSeeMore = "Xem thêm";
   static const String singleFilm = "Phim lẻ";
@@ -31,9 +34,20 @@ class StringConstants {
   static const String expand = "Mở rộng";
   static const String zoomOut = "Thu nhỏ";
   static const String keyWord = "Từ khoá";
+  static const String resultSearch = "Kết quả tìm kiếm với từ khoá";
+  static const String endScreen = "Không có nhiều thêm nữa";
+  static const String noResult = "Không có kết quả";
 }
 
 class ScreenName {
+  static const mainHomeScreen = 'MainHomeScreen';
   static const homeScreen = 'HomeScreen';
   static const searchScreen = 'SearchSreen';
+}
+
+class ColorConstants {
+  static const int primaryOrange = 0xFFfb7b3e;
+  static const int lightOrange = 0xFFfff1eb;
+  static const int dark = 0xFF44445f;
+  static const int gray = 0xFF948c9c;
 }

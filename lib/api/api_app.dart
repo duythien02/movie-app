@@ -121,6 +121,29 @@ class HandleResponseApi {
     }
     return [];
   }
+
+  static Future<List<FilmModel>> handleApiListSearch(
+      {required int limit, required String keyword}) async {
+    Map<String, String?> params = {
+      'limit': '$limit',
+      'keyword': keyword,
+    };
+    try {
+      final res = await AppApi.getListFilmSearch(params);
+      if (ApiHelper.isApiResponseSuccess(res)) {
+        final resBody = jsonDecode(res?.body ?? '');
+        final data = resBody['data'];
+        List<dynamic> listItems = data['items'];
+        List<FilmModel> listFilm =
+            listItems.map((e) => FilmModel.fromJson(e)).toList();
+        return listFilm;
+      }
+      return [];
+    } catch (e, s) {
+      LogHelper.logCatch(e: e, s: s, tag: 'Get list search error');
+    }
+    return [];
+  }
 }
 
 class AppApi {
@@ -150,6 +173,12 @@ class AppApi {
 
   static Future<Response?> getListTVShows(param) async {
     const String url = EndpointApi.getListTvShows;
+    final response = await ApiFactory.apiInstance.get(url, param);
+    return response;
+  }
+
+  static Future<Response?> getListFilmSearch(param) async {
+    const String url = EndpointApi.getListSearch;
     final response = await ApiFactory.apiInstance.get(url, param);
     return response;
   }
