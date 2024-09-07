@@ -62,11 +62,11 @@ class ShowMoreFilmList extends HomeScreenEvent {
 }
 
 class ShowSearch extends HomeScreenEvent {
-  const ShowSearch({required this.isSearching});
-  final bool isSearching;
+  const ShowSearch({required this.openSearch});
+  final bool openSearch;
 
   @override
-  List<Object> get props => [isSearching];
+  List<Object> get props => [openSearch];
 }
 
 class SubmitSearch extends HomeScreenEvent {
@@ -75,4 +75,11 @@ class SubmitSearch extends HomeScreenEvent {
 
   @override
   List<Object> get props => [keyword];
+}
+
+class ReLoadHomeScreen extends HomeScreenEvent {
+  const ReLoadHomeScreen();
+
+  @override
+  List<Object> get props => [];
 }

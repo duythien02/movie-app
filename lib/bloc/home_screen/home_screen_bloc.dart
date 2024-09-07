@@ -1,7 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:movye/api/api_app.dart';
 import 'package:movye/models/film_model.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../route/controllers.dart';
 
@@ -9,11 +11,17 @@ part 'home_screen_event.dart';
 part 'home_screen_state.dart';
 
 class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
+  final RefreshController refreshController =
+      RefreshController(initialRefresh: false);
+
+  final TextEditingController textController = TextEditingController();
+
   HomeScreenBloc() : super(const HomeScreenState()) {
     on<InitHomeScreen>(_onInitHomeScreen);
     on<ShowMoreFilmList>(_onShowMoreFilmList);
     on<ShowSearch>(_onSearching);
     on<SubmitSearch>(_onSubmitSearch);
+    on<ReLoadHomeScreen>(_onLoadHomeScreen);
   }
 
   Future<void> _onInitHomeScreen(
@@ -99,17 +107,29 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
   }
 
   void _onSearching(ShowSearch event, Emitter<HomeScreenState> emit) {
+    textController.clear();
     emit(
       state.copyWith(
-        isSearching: event.isSearching,
+        isSearching: event.openSearch,
       ),
     );
   }
 
-  void _onSubmitSearch(SubmitSearch event, Emitter<HomeScreenState> emit) {
+  Future<void> _onSubmitSearch(
+      SubmitSearch event, Emitter<HomeScreenState> emit) async {
     if (event.keyword.trim().isNotEmpty) {
+      await AppNavigatorControllers.moveToSearchScreen(keyWord: event.keyword)
+          ?.whenComplete(() => emit(state.copyWith(isSearching: false)));
+    } else {
+      textController.clear();
       emit(state.copyWith(isSearching: false));
-      AppNavigatorControllers.moveToSearchScreen(keyWord: event.keyword);
     }
+  }
+
+  Future<void> _onLoadHomeScreen(
+      ReLoadHomeScreen event, Emitter<HomeScreenState> emit) async {
+    await Future.delayed(const Duration(milliseconds: 1000));
+    add(const InitHomeScreen());
+    refreshController.refreshCompleted();
   }
 }
