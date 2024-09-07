@@ -52,7 +52,7 @@ class MyApp extends StatelessWidget {
                 ),
               ),
             ),
-            initialRoute: ScreenName.homeScreen,
+            initialRoute: ScreenName.mainHomeScreen,
           ),
         );
       },
