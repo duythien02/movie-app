@@ -51,12 +51,35 @@ class LoadTVShowList extends HomeScreenEvent {
 
 class ShowMoreFilmList extends HomeScreenEvent {
   const ShowMoreFilmList({
-    required this.isShowMore,
+    required this.isExpand,
     required this.page,
   });
   final int page;
-  final bool isShowMore;
+  final bool isExpand;
 
   @override
-  List<Object> get props => [isShowMore, page];
+  List<Object> get props => [isExpand, page];
+}
+
+class ShowSearch extends HomeScreenEvent {
+  const ShowSearch({required this.openSearch});
+  final bool openSearch;
+
+  @override
+  List<Object> get props => [openSearch];
+}
+
+class SubmitSearch extends HomeScreenEvent {
+  const SubmitSearch({required this.keyword});
+  final String keyword;
+
+  @override
+  List<Object> get props => [keyword];
+}
+
+class ReLoadHomeScreen extends HomeScreenEvent {
+  const ReLoadHomeScreen();
+
+  @override
+  List<Object> get props => [];
 }
