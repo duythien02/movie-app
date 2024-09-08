@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:movye/api/api_app.dart';
 import 'package:movye/models/film_model.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -26,6 +27,7 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
 
   Future<void> _onInitHomeScreen(
       InitHomeScreen event, Emitter<HomeScreenState> emit) async {
+    FlutterNativeSplash.remove();
     final listNewestFilm = await HandleResponseApi.handleApiListNewestFilm(
       page: 1,
     );
