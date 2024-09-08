@@ -2,15 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../constants/app_constants.dart';
+import '../constants/assets.dart';
+
 class MyNetworkImage extends StatelessWidget {
-  const MyNetworkImage({super.key, required this.url, this.radius});
+  const MyNetworkImage({
+    super.key,
+    required this.url,
+    required this.radius,
+  });
   final String url;
-  final BorderRadius? radius;
+  final BorderRadius radius;
 
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: radius == null ? BorderRadius.zero : radius!,
+      borderRadius: radius,
       child: Image(
         fit: BoxFit.cover,
         image: NetworkImage(
@@ -28,6 +35,21 @@ class MyNetworkImage extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Colors.grey.shade300,
                 borderRadius: radius,
+              ),
+            ),
+          );
+        },
+        errorBuilder:
+            (BuildContext context, Object exception, StackTrace? stackTrace) {
+          return ClipRRect(
+            borderRadius: radius,
+            child: Container(
+              color: const Color(ColorConstants.lightOrange),
+              child: const Image(
+                image: AssetImage(
+                  Assets.assetsAppLogo,
+                ),
+                fit: BoxFit.contain,
               ),
             ),
           );

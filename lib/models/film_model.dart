@@ -6,6 +6,7 @@ class FilmModel {
   String posterUrl;
   String thumpUrl;
   int year;
+  String? type;
   bool? subDocquyen;
   bool? chieurap;
   String? time;
@@ -24,6 +25,7 @@ class FilmModel {
     required this.posterUrl,
     required this.thumpUrl,
     required this.year,
+    required this.type,
     required this.subDocquyen,
     required this.chieurap,
     required this.time,
@@ -42,11 +44,16 @@ class FilmModel {
         posterUrl: json["poster_url"],
         thumpUrl: json["thumb_url"],
         year: json["year"],
+        type: json["type"],
         subDocquyen: json["sub_docquyen"],
         chieurap: json["chieurap"],
         time: json["time"],
-        episodeCurrent: json["episode_current"],
-        quality: json["quality"],
+        episodeCurrent: json["episode_current"].toString().contains("Hoàn Tất")
+            ? json["episode_current"]
+                .toString()
+                .replaceFirst("Hoàn Tất", "Trọn bộ")
+            : json["episode_current"],
+        quality: json["quality"] == "FHD" ? "Full HD" : json["quality"],
         lang: json["lang"],
         category: json["category"] == null
             ? null

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:movye/constants/app_constants.dart';
 
@@ -7,6 +8,8 @@ import 'services/app_manage.dart';
 import 'services/singleton_manage.dart';
 
 void main() async {
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await configSingleton();
   runApp(MyApp());
 }

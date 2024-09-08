@@ -32,6 +32,7 @@ class SearchScreenBloc extends Bloc<SearchScreenEvent, SearchScreenState> {
       return;
     }
     index = 0;
+    refreshController.footerMode?.value = LoadStatus.idle;
     emit(state.copyWith(
       searchListFilm: [],
       searchFullListFilm: [],
@@ -82,6 +83,7 @@ class SearchScreenBloc extends Bloc<SearchScreenEvent, SearchScreenState> {
   ) async {
     final List<FilmModel> listMoreSearch;
     await Future.delayed(const Duration(milliseconds: 500));
+    //check can load more
     if (index + 12 < state.searchFullListFilm!.length) {
       listMoreSearch = state.searchFullListFilm!.sublist(
         index,
@@ -93,14 +95,15 @@ class SearchScreenBloc extends Bloc<SearchScreenEvent, SearchScreenState> {
         index += (state.searchFullListFilm!.length - index),
       );
     }
-    if (index == state.searchFullListFilm!.length) {
-      refreshController.footerMode!.value = LoadStatus.noMore;
-    }
     emit(
       state.copyWith(
         searchListFilm: [...state.searchListFilm!, ...listMoreSearch],
       ),
     );
-    refreshController.loadComplete();
+    if (listMoreSearch.isEmpty) {
+      refreshController.loadNoData();
+    } else {
+      refreshController.loadComplete();
+    }
   }
 }

@@ -72,7 +72,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     height: 8.sp,
                   ),
                   Text(
-                    '${StringConstants.resultSearch}  "${widget.keyWord}"',
+                    '${StringConstants.resultSearch}  "${state.keyword}"',
                     style: TextStyle(
                       fontSize: 16.sp,
                       color: const Color(ColorConstants.gray),
@@ -94,7 +94,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                     Widget body;
                                     if (mode == LoadStatus.loading) {
                                       body = const Loading();
-                                    } else {
+                                    } else if (mode == LoadStatus.noMore) {
                                       body = Text(
                                         StringConstants.endScreen,
                                         style: TextStyle(
@@ -104,6 +104,9 @@ class _SearchScreenState extends State<SearchScreen> {
                                           ),
                                         ),
                                       );
+                                    } else {
+                                      print(mode);
+                                      body = const Text('aa');
                                     }
                                     return SizedBox(
                                       height: 55.sp,
@@ -140,8 +143,15 @@ class _SearchScreenState extends State<SearchScreen> {
                               ),
                             )
                           //shimmer
-                          : const Center(
-                              child: Text(StringConstants.noResult),
+                          : Center(
+                              child: Text(
+                                StringConstants.noResult,
+                                style: TextStyle(
+                                  color: const Color(ColorConstants.dark),
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             )
                       : const Expanded(
                           child: MyShimmerList(),
