@@ -9,6 +9,7 @@ import 'package:movye/constants/assets.dart';
 
 import '../bloc/home_screen/home_screen_bloc.dart';
 import '../common/appbar.dart';
+import '../common/episode.dart';
 import '../common/network_image.dart';
 import '../common/search_bar.dart';
 import '../constants/app_constants.dart';
@@ -110,12 +111,23 @@ class _HomeScreenState extends State<HomeScreen>
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(
-                            height: 212.sp,
-                            child: MyNetworkImage(
-                              url: urlImg,
-                              radius: BorderRadius.circular(5.sp),
-                            ),
+                          Stack(
+                            children: [
+                              SizedBox(
+                                height: 212.sp,
+                                child: MyNetworkImage(
+                                  url: urlImg,
+                                  radius: BorderRadius.circular(5.sp),
+                                ),
+                              ),
+                              Positioned.fill(
+                                child: Episode(
+                                  titleEp: film.type != 'series'
+                                      ? film.quality ?? ''
+                                      : film.episodeCurrent ?? '',
+                                ),
+                              ),
+                            ],
                           ),
                           SizedBox(
                             height: 8.sp,
@@ -213,7 +225,7 @@ class _HomeScreenState extends State<HomeScreen>
                   height: 40.sp,
                   width: 40.sp,
                   child: Image.asset(
-                    Assets.assetsAppFilmRoll,
+                    Assets.assetsAppLogo,
                   ),
                 ),
                 state.isSearching

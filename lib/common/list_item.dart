@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../constants/app_constants.dart';
 import '../models/film_model.dart';
+import 'episode.dart';
 import 'network_image.dart';
 
 class ListItem extends StatelessWidget {
@@ -16,13 +17,22 @@ class ListItem extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.max,
         children: [
-          SizedBox(
-            width: 150.sp,
-            height: 80.sp,
-            child: MyNetworkImage(
-              url: urlImg,
-              radius: BorderRadius.circular(5.sp),
-            ),
+          Stack(
+            children: [
+              SizedBox(
+                width: 150.sp,
+                height: 80.sp,
+                child: MyNetworkImage(
+                  url: urlImg,
+                  radius: BorderRadius.circular(5.sp),
+                ),
+              ),
+              Episode(
+                titleEp: film.type != 'series'
+                    ? film.quality ?? ''
+                    : film.episodeCurrent ?? '',
+              ),
+            ],
           ),
           SizedBox(
             width: 16.sp,
@@ -30,7 +40,7 @@ class ListItem extends StatelessWidget {
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Text(
                   film.name,
@@ -45,7 +55,7 @@ class ListItem extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  film.episodeCurrent ?? '',
+                  film.lang ?? '',
                   style: TextStyle(
                     fontSize: 12.sp,
                     color: const Color(ColorConstants.gray),
