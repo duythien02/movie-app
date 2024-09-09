@@ -31,6 +31,7 @@ class _NewestFilmScreenState extends State<NewestFilmScreen> {
     return BlocProvider(
       create: (context) => _newestFilmBloc,
       child: BlocBuilder<NewestFilmScreenBloc, NewestFilmScreenState>(
+        bloc: _newestFilmBloc,
         builder: (context, state) {
           return Scaffold(
             appBar: const MyAppBar(
@@ -82,9 +83,11 @@ class _NewestFilmScreenState extends State<NewestFilmScreen> {
                       listFilm: state.newestFilmList,
                     ),
                   )
-                : NoInternet(tryAgain: () {
-                    _newestFilmBloc.add(const InitNewestFilmScreen());
-                  }),
+                : NoInternet(
+                    tryAgain: () {
+                      _newestFilmBloc.add(const InitNewestFilmScreen());
+                    },
+                  ),
           );
         },
       ),
