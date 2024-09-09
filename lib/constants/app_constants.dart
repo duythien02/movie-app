@@ -38,6 +38,7 @@ class StringConstants {
   static const String endScreen = "Không có nhiều thêm nữa";
   static const String noResult = "Không có kết quả";
   static const String noInternet = "Không có kết nối mạng";
+  static const String checkYourInternet = "Hãy kiểm tra kết nối mạng của bạn";
   static const String tryAgain = "Thử lại";
 }
 
