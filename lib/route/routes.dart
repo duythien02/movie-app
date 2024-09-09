@@ -7,7 +7,7 @@ import '../screen/home/series_film.dart';
 import '../screen/home/single_film.dart';
 import '../screen/home/tvshows.dart';
 import '../screen/main_home.dart';
-import '../screen/search.dart';
+import '../screen/home/search.dart';
 import 'route_animation.dart';
 
 class AppNavigatorRoutes {

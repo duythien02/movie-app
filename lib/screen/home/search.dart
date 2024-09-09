@@ -6,11 +6,11 @@ import 'package:movye/common/no_internet.dart';
 import 'package:movye/common/shimmer.dart';
 import 'package:movye/route/controllers.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import '../bloc/search_screen/search_screen_bloc.dart';
-import '../common/appbar.dart';
-import '../common/list_item.dart';
-import '../common/search_bar.dart';
-import '../constants/app_constants.dart';
+import '../../bloc/search_screen/search_screen_bloc.dart';
+import '../../common/appbar.dart';
+import '../../common/list_item.dart';
+import '../../common/search_bar.dart';
+import '../../constants/app_constants.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key, required this.keyWord});
