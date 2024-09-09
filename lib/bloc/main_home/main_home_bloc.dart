@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 import '../../screen/favourite.dart';
-import '../../screen/home.dart';
+import '../../screen/home/home.dart';
 
 part 'main_home_event.dart';
 part 'main_home_state.dart';

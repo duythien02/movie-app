@@ -6,13 +6,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:movye/common/shimmer.dart';
 import 'package:movye/constants/assets.dart';
 
-import '../bloc/home_screen/home_screen_bloc.dart';
-import '../common/appbar.dart';
-import '../common/episode.dart';
-import '../common/network_image.dart';
-import '../common/search_bar.dart';
-import '../constants/app_constants.dart';
-import '../models/film_model.dart';
+import '../../../bloc/home_screen/home_screen_bloc.dart';
+import '../../../common/appbar.dart';
+import '../../../common/episode.dart';
+import '../../../common/network_image.dart';
+import '../../../common/search_bar.dart';
+import '../../../constants/app_constants.dart';
+import '../../../models/film_model.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
