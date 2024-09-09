@@ -23,7 +23,7 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
     on<ShowMoreFilmList>(_onShowMoreFilmList);
     on<ShowSearch>(_onSearching);
     on<SubmitSearch>(_onSubmitSearch);
-    on<ReLoadHomeScreen>(_onReLoadHomeScreen);
+    on<GoToSeeMoreScreen>(_onGoToSeeMoreScreen);
   }
 
   Future<void> _onInitHomeScreen(
@@ -136,10 +136,7 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
       await AppNavigatorControllers.moveToSearchScreen(keyWord: event.keyword)
           ?.whenComplete(() async {
         emit(state.copyWith(isSearching: false));
-        final bool hasNetwork = await NetworkHelper.checkNetwork();
-        if (!hasNetwork) {
-          NetworkHelper.showToast();
-        }
+        await checkNetwork();
       });
     } else {
       textController.clear();
@@ -147,9 +144,48 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
     }
   }
 
-  Future<void> _onReLoadHomeScreen(
-      ReLoadHomeScreen event, Emitter<HomeScreenState> emit) async {
-    add(const InitHomeScreen());
-    refreshController.refreshCompleted();
+  Future<void> _onGoToSeeMoreScreen(
+      GoToSeeMoreScreen event, Emitter<HomeScreenState> emit) async {
+    switch (event.page) {
+      case 0:
+        await AppNavigatorControllers.moveToNewestFilmScreen()
+            ?.whenComplete(() async {
+          await checkNetwork();
+        });
+        break;
+      case 1:
+        AppNavigatorControllers.moveToSingleFilmScreen()
+            ?.whenComplete(() async {
+          await checkNetwork();
+        });
+        break;
+      case 2:
+        AppNavigatorControllers.moveToSeriesFilmScreen()
+            ?.whenComplete(() async {
+          await checkNetwork();
+        });
+        break;
+      case 3:
+        AppNavigatorControllers.moveToCartoonScreen()?.whenComplete(() async {
+          await checkNetwork();
+        });
+        break;
+      default:
+        AppNavigatorControllers.moveToTvshowsScreen()?.whenComplete(() async {
+          await checkNetwork();
+        });
+    }
+  }
+
+  Future<void> checkNetwork() async {
+    final bool hasNetwork = await NetworkHelper.checkNetwork();
+    if (hasNetwork) {
+      return;
+    } else {
+      await Future.delayed(
+        const Duration(milliseconds: 500),
+      );
+      NetworkHelper.showToast();
+    }
   }
 }

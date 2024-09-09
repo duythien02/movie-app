@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:movye/common/loading.dart';
+import 'package:movye/common/no_internet.dart';
 import 'package:movye/common/shimmer.dart';
 import 'package:movye/route/controllers.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import '../bloc/search_screen/search_screen_bloc.dart';
-import '../common/appbar.dart';
-import '../common/list_item.dart';
-import '../common/search_bar.dart';
-import '../constants/app_constants.dart';
+import '../../bloc/search_screen/search_screen_bloc.dart';
+import '../../common/appbar.dart';
+import '../../common/list_item.dart';
+import '../../common/search_bar.dart';
+import '../../constants/app_constants.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key, required this.keyWord});
@@ -26,7 +27,6 @@ class _SearchScreenState extends State<SearchScreen> {
     super.initState();
     _searchBloc.textController.text = widget.keyWord;
     _searchBloc.add(const ShowResultSearch());
-    _searchBloc.textController.text = widget.keyWord;
   }
 
   @override
@@ -74,7 +74,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       height: 8.sp,
                     ),
                     Text(
-                      '${StringConstants.resultSearch}  "${state.keyword}"',
+                      '${StringConstants.resultSearch}  "${_searchBloc.textController.text}"',
                       style: TextStyle(
                         fontSize: 16.sp,
                         color: const Color(ColorConstants.gray),
@@ -159,51 +159,10 @@ class _SearchScreenState extends State<SearchScreen> {
                                     ),
                                   ),
                                 )
-                          : Center(
-                              child: Column(
-                                children: [
-                                  Text(
-                                    StringConstants.noInternet,
-                                    style: TextStyle(
-                                      color: const Color(ColorConstants.dark),
-                                      fontSize: 16.sp,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 8.sp,
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      _searchBloc.add(
-                                        const ShowResultSearch(),
-                                      );
-                                    },
-                                    child: Container(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 8.sp,
-                                        vertical: 4.sp,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(100.sp),
-                                        border: Border.all(
-                                          color:
-                                              const Color(ColorConstants.gray),
-                                        ),
-                                      ),
-                                      child: Text(
-                                        StringConstants.tryAgain,
-                                        style: TextStyle(
-                                          fontSize: 12.sp,
-                                          color:
-                                              const Color(ColorConstants.gray),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                          : NoInternet(
+                              tryAgain: () {
+                                _searchBloc.add(const ShowResultSearch());
+                              },
                             )
                       : const Expanded(
                           child: MyShimmerList(),
