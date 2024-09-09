@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:movye/common/gridview.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,7 +9,6 @@ import 'package:movye/constants/assets.dart';
 
 import '../../../bloc/home_screen/home_screen_bloc.dart';
 import '../../../common/appbar.dart';
-import '../../../common/episode.dart';
 import '../../../common/network_image.dart';
 import '../../../common/search_bar.dart';
 import '../../../constants/app_constants.dart';
@@ -35,7 +35,10 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   //Widget Common
-  Widget _title(String title) {
+  Widget _title(
+    String title,
+    int page,
+  ) {
     return Column(
       children: [
         Padding(
@@ -51,22 +54,31 @@ class _HomeScreenState extends State<HomeScreen>
                 ),
               ),
               const Spacer(),
-              Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 8.sp,
-                  vertical: 4.sp,
-                ),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(100.sp),
-                  border: Border.all(
-                    color: const Color(ColorConstants.gray),
+              GestureDetector(
+                onTap: () {
+                  _homeBloc.add(
+                    GoToSeeMoreScreen(
+                      page: page,
+                    ),
+                  );
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 8.sp,
+                    vertical: 4.sp,
                   ),
-                ),
-                child: Text(
-                  StringConstants.sliderSeeMore,
-                  style: TextStyle(
-                    fontSize: 12.sp,
-                    color: const Color(ColorConstants.gray),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(100.sp),
+                    border: Border.all(
+                      color: const Color(ColorConstants.gray),
+                    ),
+                  ),
+                  child: Text(
+                    StringConstants.sliderSeeMore,
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      color: const Color(ColorConstants.gray),
+                    ),
                   ),
                 ),
               ),
@@ -88,96 +100,13 @@ class _HomeScreenState extends State<HomeScreen>
         SizedBox(
           height: 24.sp,
         ),
-        _title(title),
+        _title(title, page),
         SizedBox(
           height: 16.sp,
         ),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.sp),
-          child: GridView.count(
-            shrinkWrap: true,
-            crossAxisCount: 3,
-            physics: const NeverScrollableScrollPhysics(),
-            crossAxisSpacing: 4.sp,
-            mainAxisSpacing: 8.sp,
-            childAspectRatio: 0.38.sp,
-            children: listFilm != null && listFilm.isNotEmpty
-                ? List.generate(
-                    isExpand ? listFilm.length : 6,
-                    (index) {
-                      final film = listFilm[index];
-                      String urlImg = AppConstants.apiFilmImg + film.posterUrl;
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Stack(
-                            children: [
-                              SizedBox(
-                                height: 212.sp,
-                                child: MyNetworkImage(
-                                  url: urlImg,
-                                  radius: BorderRadius.circular(5.sp),
-                                ),
-                              ),
-                              Positioned.fill(
-                                child: Episode(
-                                  titleEp: film.type != 'series'
-                                      ? film.quality ?? ''
-                                      : film.episodeCurrent ?? '',
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 8.sp,
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 4.sp,
-                            ),
-                            child: Text(
-                              film.name,
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                color: const Color(ColorConstants.dark),
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 2,
-                            ),
-                          ),
-                        ],
-                      );
-                    },
-                  )
-                //shimmer
-                : List.generate(
-                    6,
-                    (index) {
-                      return Column(
-                        children: [
-                          MyShimmer(
-                            height: 212.sp,
-                            decoration: BoxDecoration(
-                              color: Colors.grey.shade300,
-                              borderRadius: BorderRadius.circular(5.sp),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 8.sp,
-                          ),
-                          MyShimmer(
-                            height: 16.sp,
-                            width: 143.sp,
-                            decoration: BoxDecoration(
-                              color: Colors.grey.shade300,
-                              borderRadius: BorderRadius.circular(5.sp),
-                            ),
-                          ),
-                        ],
-                      );
-                    },
-                  ),
-          ),
+        MyGridView.home(
+          isExpand: isExpand,
+          listFilm: listFilm,
         ),
         SizedBox(
           height: 12.sp,
@@ -185,8 +114,12 @@ class _HomeScreenState extends State<HomeScreen>
         GestureDetector(
           onTap: listFilm != null && listFilm.isNotEmpty
               ? () {
-                  _homeBloc
-                      .add(ShowMoreFilmList(isExpand: !isExpand, page: page));
+                  _homeBloc.add(
+                    ShowMoreFilmList(
+                      isExpand: !isExpand,
+                      page: page,
+                    ),
+                  );
                 }
               : null,
           child: Container(
@@ -288,7 +221,7 @@ class _HomeScreenState extends State<HomeScreen>
                     SizedBox(
                       height: 16.sp,
                     ),
-                    _title(StringConstants.newestFilm),
+                    _title(StringConstants.newestFilm, 0),
                     SizedBox(
                       height: 16.sp,
                     ),

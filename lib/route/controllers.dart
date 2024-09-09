@@ -16,4 +16,34 @@ class AppNavigatorControllers {
       arguments: keyWord,
     );
   }
+
+  static Future? moveToNewestFilmScreen() {
+    return AppManage.mainNavigatorService.pushNamed(
+      ScreenName.newestFilmScreen,
+    );
+  }
+
+  static Future? moveToSingleFilmScreen() {
+    return AppManage.mainNavigatorService.pushNamed(
+      ScreenName.singleFilmScreen,
+    );
+  }
+
+  static Future? moveToSeriesFilmScreen() {
+    return AppManage.mainNavigatorService.pushNamed(
+      ScreenName.seriesFilmScreen,
+    );
+  }
+
+  static Future? moveToCartoonScreen() {
+    return AppManage.mainNavigatorService.pushNamed(
+      ScreenName.cartoonScreen,
+    );
+  }
+
+  static Future? moveToTvshowsScreen() {
+    return AppManage.mainNavigatorService.pushNamed(
+      ScreenName.tvshowsScreen,
+    );
+  }
 }

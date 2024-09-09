@@ -45,6 +45,12 @@ class ScreenName {
   static const mainHomeScreen = 'MainHomeScreen';
   static const homeScreen = 'HomeScreen';
   static const searchScreen = 'SearchSreen';
+  static const newestFilmScreen = 'NewestFilmScreen';
+  static const singleFilmScreen = 'SingleFilmScreen';
+  static const seriesFilmScreen = 'SeriesFilmScreen';
+  static const cartoonScreen = 'CartoonScreen';
+  static const tvshowsScreen = 'TvshowsScreen';
+  static const favouriteScreen = 'FavouriteScreen';
 }
 
 class ColorConstants {

@@ -14,41 +14,6 @@ class InitHomeScreen extends HomeScreenEvent {
   List<Object> get props => [];
 }
 
-class LoadNewestFilmList extends HomeScreenEvent {
-  const LoadNewestFilmList();
-
-  @override
-  List<Object> get props => [];
-}
-
-class LoadSingleFilmList extends HomeScreenEvent {
-  const LoadSingleFilmList();
-
-  @override
-  List<Object> get props => [];
-}
-
-class LoadSeriesFilmList extends HomeScreenEvent {
-  const LoadSeriesFilmList();
-
-  @override
-  List<Object> get props => [];
-}
-
-class LoadCartoonList extends HomeScreenEvent {
-  const LoadCartoonList();
-
-  @override
-  List<Object> get props => [];
-}
-
-class LoadTVShowList extends HomeScreenEvent {
-  const LoadTVShowList();
-
-  @override
-  List<Object> get props => [];
-}
-
 class ShowMoreFilmList extends HomeScreenEvent {
   const ShowMoreFilmList({
     required this.isExpand,
@@ -79,6 +44,14 @@ class SubmitSearch extends HomeScreenEvent {
 
 class ReLoadHomeScreen extends HomeScreenEvent {
   const ReLoadHomeScreen();
+
+  @override
+  List<Object> get props => [];
+}
+
+class GoToSeeMoreScreen extends HomeScreenEvent {
+  const GoToSeeMoreScreen({required this.page});
+  final int page;
 
   @override
   List<Object> get props => [];
