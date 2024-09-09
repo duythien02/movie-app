@@ -209,7 +209,10 @@ class _HomeScreenState extends State<HomeScreen>
             )),
             body: SmartRefresher(
               controller: _homeBloc.refreshController,
-              onRefresh: () => _homeBloc.add(const ReLoadHomeScreen()),
+              onRefresh: () {
+                _homeBloc.add(const InitHomeScreen());
+                _homeBloc.refreshController.refreshCompleted();
+              },
               header: const MaterialClassicHeader(
                 color: Color(
                   ColorConstants.primaryOrange,

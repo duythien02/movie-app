@@ -42,13 +42,6 @@ class SubmitSearch extends HomeScreenEvent {
   List<Object> get props => [keyword];
 }
 
-class ReLoadHomeScreen extends HomeScreenEvent {
-  const ReLoadHomeScreen();
-
-  @override
-  List<Object> get props => [];
-}
-
 class GoToSeeMoreScreen extends HomeScreenEvent {
   const GoToSeeMoreScreen({required this.page});
   final int page;

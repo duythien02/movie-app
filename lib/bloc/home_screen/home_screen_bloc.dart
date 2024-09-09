@@ -23,7 +23,6 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
     on<ShowMoreFilmList>(_onShowMoreFilmList);
     on<ShowSearch>(_onSearching);
     on<SubmitSearch>(_onSubmitSearch);
-    on<ReLoadHomeScreen>(_onReLoadHomeScreen);
     on<GoToSeeMoreScreen>(_onGoToSeeMoreScreen);
   }
 
@@ -143,12 +142,6 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
       textController.clear();
       emit(state.copyWith(isSearching: false));
     }
-  }
-
-  Future<void> _onReLoadHomeScreen(
-      ReLoadHomeScreen event, Emitter<HomeScreenState> emit) async {
-    add(const InitHomeScreen());
-    refreshController.refreshCompleted();
   }
 
   Future<void> _onGoToSeeMoreScreen(

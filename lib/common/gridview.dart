@@ -10,24 +10,30 @@ import 'shimmer.dart';
 class MyGridView extends StatelessWidget {
   const MyGridView.home({
     super.key,
-    this.listFilm,
+    required this.listFilm,
     required this.isExpand,
-  });
+  }) : canScroll = false;
   const MyGridView.other({
     super.key,
-    this.listFilm,
-  }) : isExpand = true;
+    required this.listFilm,
+  })  : isExpand = true,
+        canScroll = true;
+
   final List<FilmModel>? listFilm;
   final bool isExpand;
+  final bool canScroll;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.sp),
       child: GridView.count(
+        padding: canScroll ? EdgeInsets.only(top: 8.sp) : EdgeInsets.zero,
         shrinkWrap: true,
         crossAxisCount: 3,
-        physics: const NeverScrollableScrollPhysics(),
+        physics: canScroll
+            ? const ScrollPhysics()
+            : const NeverScrollableScrollPhysics(),
         crossAxisSpacing: 4.sp,
         mainAxisSpacing: 8.sp,
         childAspectRatio: 0.38.sp,
@@ -36,7 +42,10 @@ class MyGridView extends StatelessWidget {
                 isExpand ? listFilm!.length : 6,
                 (index) {
                   final film = listFilm![index];
-                  String urlImg = AppConstants.apiFilmImg + film.posterUrl;
+                  String urlImg = listFilm![index].posterUrl;
+                  if (!canScroll) {
+                    urlImg = AppConstants.apiFilmImg + film.posterUrl;
+                  }
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
