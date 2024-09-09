@@ -8,8 +8,7 @@ class SearchScreenEvent extends Equatable {
 }
 
 class ShowResultSearch extends SearchScreenEvent {
-  const ShowResultSearch({required this.keyword});
-  final String keyword;
+  const ShowResultSearch();
 
   @override
   List<Object> get props => [];

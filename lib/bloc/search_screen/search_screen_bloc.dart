@@ -5,6 +5,7 @@ import 'package:movye/models/film_model.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../api/api_app.dart';
+import '../../helper/network_helper.dart';
 
 part 'search_screen_event.dart';
 part 'search_screen_state.dart';
@@ -23,57 +24,68 @@ class SearchScreenBloc extends Bloc<SearchScreenEvent, SearchScreenState> {
 
   Future<void> _onInitSearchScreen(
       ShowResultSearch event, Emitter<SearchScreenState> emit) async {
-    if (event.keyword.trim().isEmpty) {
-      textController.clear();
-      return;
-    }
-
-    if (state.keyword.trim() == event.keyword.trim()) {
-      return;
-    }
-    index = 0;
-    refreshController.footerMode?.value = LoadStatus.idle;
     emit(state.copyWith(
-      searchListFilm: [],
-      searchFullListFilm: [],
       isLoading: true,
-      isCanLoadMore: false,
-      keyword: event.keyword.trim(),
     ));
-    final listSearch = await HandleResponseApi.handleApiListSearch(
-      limit: 100,
-      keyword: event.keyword.trim(),
-    );
-    if (listSearch.length > 12) {
-      emit(
-        state.copyWith(
-          isLoading: false,
-          searchFullListFilm: listSearch,
-          searchListFilm: listSearch.sublist(index, index += 12),
-          isCanLoadMore: true,
-        ),
-      );
-    } else if (listSearch.length <= 12) {
-      emit(
-        state.copyWith(
-          isLoading: false,
-          searchFullListFilm: listSearch,
-          searchListFilm: listSearch.sublist(
-            index,
-            index += listSearch.length - index,
-          ),
-          isCanLoadMore: false,
-        ),
-      );
+    final bool hasNetwork = await NetworkHelper.checkNetwork();
+    if (!hasNetwork) {
+      await Future.delayed(const Duration(milliseconds: 500));
+      emit(state.copyWith(
+        isLoading: false,
+        isHasNetwork: false,
+      ));
     } else {
-      emit(
-        state.copyWith(
-          isLoading: false,
-          searchFullListFilm: listSearch,
-          searchListFilm: [],
-          isCanLoadMore: false,
-        ),
+      if (textController.text.trim().isEmpty) {
+        textController.clear();
+        return;
+      }
+      if (state.keyword.trim() == textController.text.trim()) {
+        return;
+      }
+      index = 0;
+      refreshController.footerMode?.value = LoadStatus.idle;
+      emit(state.copyWith(
+        searchListFilm: [],
+        searchFullListFilm: [],
+        isCanLoadMore: false,
+        isHasNetwork: true,
+        keyword: textController.text.trim(),
+      ));
+      final listSearch = await HandleResponseApi.handleApiListSearch(
+        limit: 100,
+        keyword: textController.text.trim(),
       );
+      if (listSearch.length > 12) {
+        emit(
+          state.copyWith(
+            isLoading: false,
+            searchFullListFilm: listSearch,
+            searchListFilm: listSearch.sublist(index, index += 12),
+            isCanLoadMore: true,
+          ),
+        );
+      } else if (listSearch.length <= 12) {
+        emit(
+          state.copyWith(
+            isLoading: false,
+            searchFullListFilm: listSearch,
+            searchListFilm: listSearch.sublist(
+              index,
+              index += listSearch.length - index,
+            ),
+            isCanLoadMore: false,
+          ),
+        );
+      } else {
+        emit(
+          state.copyWith(
+            isLoading: false,
+            searchFullListFilm: listSearch,
+            searchListFilm: [],
+            isCanLoadMore: false,
+          ),
+        );
+      }
     }
   }
 

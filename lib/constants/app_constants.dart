@@ -37,6 +37,8 @@ class StringConstants {
   static const String resultSearch = "Kết quả tìm kiếm với từ khoá";
   static const String endScreen = "Không có nhiều thêm nữa";
   static const String noResult = "Không có kết quả";
+  static const String noInternet = "Không có kết nối mạng";
+  static const String tryAgain = "Thử lại";
 }
 
 class ScreenName {
