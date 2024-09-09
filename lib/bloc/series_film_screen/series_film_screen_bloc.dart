@@ -15,11 +15,11 @@ class SeriesFilmScreenBloc
   RefreshController refreshController = RefreshController();
 
   SeriesFilmScreenBloc() : super(const SeriesFilmScreenState()) {
-    on<InitSeriesFilmScreen>(onInitSeriesFilmScreen);
-    on<LoadMoreSeriesFilm>(onLoadMoreSeriesFilm);
+    on<InitSeriesFilmScreen>(_onInitSeriesFilmScreen);
+    on<LoadMoreSeriesFilm>(_onLoadMoreSeriesFilm);
   }
 
-  Future<void> onInitSeriesFilmScreen(
+  Future<void> _onInitSeriesFilmScreen(
       InitSeriesFilmScreen event, Emitter<SeriesFilmScreenState> emit) async {
     emit(state.copyWith(isHasNetwork: true));
     await Future.delayed(
@@ -53,7 +53,7 @@ class SeriesFilmScreenBloc
     }
   }
 
-  Future<void> onLoadMoreSeriesFilm(
+  Future<void> _onLoadMoreSeriesFilm(
       LoadMoreSeriesFilm event, Emitter<SeriesFilmScreenState> emit) async {
     final listMoreSeriesFilm = await HandleResponseApi.handleApiListSeries(
       page: ++page,
