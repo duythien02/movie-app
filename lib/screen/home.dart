@@ -1,5 +1,4 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:movye/common/loading.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -102,7 +101,7 @@ class _HomeScreenState extends State<HomeScreen>
             crossAxisSpacing: 4.sp,
             mainAxisSpacing: 8.sp,
             childAspectRatio: 0.38.sp,
-            children: listFilm != null
+            children: listFilm != null && listFilm.isNotEmpty
                 ? List.generate(
                     isExpand ? listFilm.length : 6,
                     (index) {
@@ -184,9 +183,12 @@ class _HomeScreenState extends State<HomeScreen>
           height: 12.sp,
         ),
         GestureDetector(
-          onTap: () {
-            _homeBloc.add(ShowMoreFilmList(isExpand: !isExpand, page: page));
-          },
+          onTap: listFilm != null && listFilm.isNotEmpty
+              ? () {
+                  _homeBloc
+                      .add(ShowMoreFilmList(isExpand: !isExpand, page: page));
+                }
+              : null,
           child: Container(
             margin: EdgeInsets.symmetric(horizontal: 16.sp),
             height: 32.sp,
@@ -275,10 +277,10 @@ class _HomeScreenState extends State<HomeScreen>
             body: SmartRefresher(
               controller: _homeBloc.refreshController,
               onRefresh: () => _homeBloc.add(const ReLoadHomeScreen()),
-              header: CustomHeader(
-                builder: (context, mode) {
-                  return const Loading();
-                },
+              header: const MaterialClassicHeader(
+                color: Color(
+                  ColorConstants.primaryOrange,
+                ),
               ),
               child: SingleChildScrollView(
                 child: Column(
@@ -295,77 +297,84 @@ class _HomeScreenState extends State<HomeScreen>
                       options: CarouselOptions(
                         height: 283.sp,
                         viewportFraction: 0.3.sp,
-                        autoPlay: true,
+                        autoPlay: state.newestFilmList != null &&
+                            state.newestFilmList!.isNotEmpty,
                         autoPlayInterval: const Duration(seconds: 5),
                         scrollDirection: Axis.horizontal,
+                        scrollPhysics: state.newestFilmList != null &&
+                                state.newestFilmList!.isNotEmpty
+                            ? null
+                            : const NeverScrollableScrollPhysics(),
                       ),
-                      items: state.newestFilmList?.map((film) {
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  margin: EdgeInsets.symmetric(
-                                    horizontal: 2.sp,
-                                  ),
-                                  width: 143.sp,
-                                  height: 212.sp,
-                                  child: MyNetworkImage(
-                                    url: film.posterUrl,
-                                    radius: BorderRadius.circular(5.sp),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 8.sp,
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 4.sp,
-                                  ),
-                                  child: Text(
-                                    film.name,
-                                    style: TextStyle(
-                                      fontSize: 14.sp,
-                                      color: const Color(ColorConstants.dark),
+                      items: state.newestFilmList != null &&
+                              state.newestFilmList!.isNotEmpty
+                          ? state.newestFilmList?.map((film) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    margin: EdgeInsets.symmetric(
+                                      horizontal: 2.sp,
                                     ),
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 2,
+                                    width: 143.sp,
+                                    height: 212.sp,
+                                    child: MyNetworkImage(
+                                      url: film.posterUrl,
+                                      radius: BorderRadius.circular(5.sp),
+                                    ),
                                   ),
-                                ),
-                              ],
-                            );
-                          }).toList() ??
-                          List.generate(
-                            10,
-                            (index) => Column(
-                              children: [
-                                MyShimmer(
-                                  height: 212.sp,
-                                  width: 143.sp,
-                                  margin: EdgeInsets.symmetric(
-                                    horizontal: 2.sp,
+                                  SizedBox(
+                                    height: 8.sp,
                                   ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey.shade300,
-                                    borderRadius: BorderRadius.circular(5.sp),
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 4.sp,
+                                    ),
+                                    child: Text(
+                                      film.name,
+                                      style: TextStyle(
+                                        fontSize: 14.sp,
+                                        color: const Color(ColorConstants.dark),
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 2,
+                                    ),
                                   ),
-                                ),
-                                SizedBox(
-                                  height: 8.sp,
-                                ),
-                                MyShimmer(
-                                  height: 16.sp,
-                                  width: 143.sp,
-                                  margin: EdgeInsets.symmetric(
-                                    horizontal: 2.sp,
+                                ],
+                              );
+                            }).toList()
+                          : List.generate(
+                              3,
+                              (index) => Column(
+                                children: [
+                                  MyShimmer(
+                                    height: 212.sp,
+                                    width: 143.sp,
+                                    margin: EdgeInsets.symmetric(
+                                      horizontal: 2.sp,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey.shade300,
+                                      borderRadius: BorderRadius.circular(5.sp),
+                                    ),
                                   ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey.shade300,
-                                    borderRadius: BorderRadius.circular(5.sp),
+                                  SizedBox(
+                                    height: 8.sp,
                                   ),
-                                ),
-                              ],
+                                  MyShimmer(
+                                    height: 16.sp,
+                                    width: 143.sp,
+                                    margin: EdgeInsets.symmetric(
+                                      horizontal: 2.sp,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey.shade300,
+                                      borderRadius: BorderRadius.circular(5.sp),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
                     ),
 
                     _gridViewFilm(

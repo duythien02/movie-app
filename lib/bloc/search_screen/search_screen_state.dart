@@ -6,6 +6,7 @@ class SearchScreenState extends Equatable {
     this.searchListFilm,
     this.isLoading = true,
     this.isCanLoadMore = false,
+    this.isHasNetwork = true,
     this.keyword = '',
   });
 
@@ -13,6 +14,7 @@ class SearchScreenState extends Equatable {
   final List<FilmModel>? searchListFilm;
   final bool isLoading;
   final bool isCanLoadMore;
+  final bool isHasNetwork;
   final String keyword;
 
   SearchScreenState copyWith({
@@ -20,6 +22,7 @@ class SearchScreenState extends Equatable {
     List<FilmModel>? searchListFilm,
     bool? isLoading,
     bool? isCanLoadMore,
+    bool? isHasNetwork,
     String? keyword,
   }) {
     return SearchScreenState(
@@ -27,6 +30,7 @@ class SearchScreenState extends Equatable {
       searchListFilm: searchListFilm ?? this.searchListFilm,
       isLoading: isLoading ?? this.isLoading,
       isCanLoadMore: isCanLoadMore ?? this.isCanLoadMore,
+      isHasNetwork: isHasNetwork ?? this.isHasNetwork,
       keyword: keyword ?? this.keyword,
     );
   }
@@ -37,6 +41,7 @@ class SearchScreenState extends Equatable {
         searchListFilm,
         isLoading,
         isCanLoadMore,
+        isHasNetwork,
         keyword,
       ];
 }

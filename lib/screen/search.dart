@@ -24,7 +24,8 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   void initState() {
     super.initState();
-    _searchBloc.add(ShowResultSearch(keyword: widget.keyWord));
+    _searchBloc.textController.text = widget.keyWord;
+    _searchBloc.add(const ShowResultSearch());
     _searchBloc.textController.text = widget.keyWord;
   }
 
@@ -50,7 +51,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   Expanded(
                     child: MySearchBar(
                       onSubmitted: (value) {
-                        _searchBloc.add(ShowResultSearch(keyword: value));
+                        _searchBloc.add(const ShowResultSearch());
                       },
                       onTapOutside: () {
                         FocusScope.of(context).requestFocus(FocusNode());
@@ -68,89 +69,140 @@ class _SearchScreenState extends State<SearchScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  SizedBox(
-                    height: 8.sp,
-                  ),
-                  Text(
-                    '${StringConstants.resultSearch}  "${state.keyword}"',
-                    style: TextStyle(
-                      fontSize: 16.sp,
-                      color: const Color(ColorConstants.gray),
+                  if (state.isHasNetwork) ...[
+                    SizedBox(
+                      height: 8.sp,
                     ),
-                  ),
+                    Text(
+                      '${StringConstants.resultSearch}  "${state.keyword}"',
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        color: const Color(ColorConstants.gray),
+                      ),
+                    ),
+                  ],
                   SizedBox(
                     height: 16.sp,
                   ),
                   !state.isLoading
-                      ? state.searchListFilm != null &&
-                              state.searchListFilm!.isNotEmpty
-                          ? Expanded(
-                              child: SmartRefresher(
-                                controller: _searchBloc.refreshController,
-                                enablePullDown: false,
-                                enablePullUp: state.isCanLoadMore,
-                                footer: CustomFooter(
-                                  builder: (context, mode) {
-                                    Widget body;
-                                    if (mode == LoadStatus.loading) {
-                                      body = const Loading();
-                                    } else if (mode == LoadStatus.noMore) {
-                                      body = Text(
-                                        StringConstants.endScreen,
-                                        style: TextStyle(
-                                          fontSize: 14.sp,
-                                          color: const Color(
-                                            ColorConstants.gray,
+                      ? state.isHasNetwork
+                          ? state.searchListFilm != null &&
+                                  state.searchListFilm!.isNotEmpty
+                              ? Expanded(
+                                  child: SmartRefresher(
+                                    controller: _searchBloc.refreshController,
+                                    enablePullDown: false,
+                                    enablePullUp: state.isCanLoadMore,
+                                    footer: CustomFooter(
+                                      builder: (context, mode) {
+                                        Widget body;
+                                        if (mode == LoadStatus.loading) {
+                                          body = const Loading();
+                                        } else if (mode == LoadStatus.noMore) {
+                                          body = Text(
+                                            StringConstants.endScreen,
+                                            style: TextStyle(
+                                              fontSize: 14.sp,
+                                              color: const Color(
+                                                ColorConstants.gray,
+                                              ),
+                                            ),
+                                          );
+                                        } else {
+                                          body = const Text('');
+                                        }
+                                        return SizedBox(
+                                          height: 55.sp,
+                                          child: Center(
+                                            child: body,
                                           ),
-                                        ),
-                                      );
-                                    } else {
-                                      print(mode);
-                                      body = const Text('aa');
-                                    }
-                                    return SizedBox(
-                                      height: 55.sp,
-                                      child: Center(
-                                        child: body,
+                                        );
+                                      },
+                                    ),
+                                    onLoading: () {
+                                      _searchBloc.add(const LoadMore());
+                                    },
+                                    child: SingleChildScrollView(
+                                      child: Column(
+                                        children: List.generate(
+                                            state.searchListFilm!.length,
+                                            (index) {
+                                          final film =
+                                              state.searchListFilm![index];
+                                          String urlImg =
+                                              AppConstants.apiFilmImg +
+                                                  film.thumpUrl;
+                                          return Column(
+                                            children: [
+                                              ListItem(
+                                                film: film,
+                                                urlImg: urlImg,
+                                              ),
+                                              SizedBox(
+                                                height: 10.sp,
+                                              )
+                                            ],
+                                          );
+                                        }),
                                       ),
-                                    );
-                                  },
-                                ),
-                                onLoading: () {
-                                  _searchBloc.add(const LoadMore());
-                                },
-                                child: SingleChildScrollView(
-                                  child: Column(
-                                    children: List.generate(
-                                        state.searchListFilm!.length, (index) {
-                                      final film = state.searchListFilm![index];
-                                      String urlImg = AppConstants.apiFilmImg +
-                                          film.thumpUrl;
-                                      return Column(
-                                        children: [
-                                          ListItem(
-                                            film: film,
-                                            urlImg: urlImg,
-                                          ),
-                                          SizedBox(
-                                            height: 10.sp,
-                                          )
-                                        ],
-                                      );
-                                    }),
+                                    ),
                                   ),
-                                ),
-                              ),
-                            )
-                          //shimmer
+                                )
+                              //shimmer
+                              : Center(
+                                  child: Text(
+                                    StringConstants.noResult,
+                                    style: TextStyle(
+                                      color: const Color(ColorConstants.dark),
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                )
                           : Center(
-                              child: Text(
-                                StringConstants.noResult,
-                                style: TextStyle(
-                                  color: const Color(ColorConstants.dark),
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                              child: Column(
+                                children: [
+                                  Text(
+                                    StringConstants.noInternet,
+                                    style: TextStyle(
+                                      color: const Color(ColorConstants.dark),
+                                      fontSize: 16.sp,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 8.sp,
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      _searchBloc.add(
+                                        const ShowResultSearch(),
+                                      );
+                                    },
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 8.sp,
+                                        vertical: 4.sp,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(100.sp),
+                                        border: Border.all(
+                                          color:
+                                              const Color(ColorConstants.gray),
+                                        ),
+                                      ),
+                                      child: Text(
+                                        StringConstants.tryAgain,
+                                        style: TextStyle(
+                                          fontSize: 12.sp,
+                                          color:
+                                              const Color(ColorConstants.gray),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             )
                       : const Expanded(
