@@ -31,7 +31,7 @@ class _SeriesFilmScreenState extends State<SeriesFilmScreen> {
           return Scaffold(
             appBar: const MyAppBar(
               child: SimpleChildAppBar(
-                titleAppBar: StringConstants.singleFilm,
+                titleAppBar: StringConstants.series,
               ),
             ),
             body: ListFilm(
