@@ -40,6 +40,11 @@ class StringConstants {
   static const String noInternet = "Không có kết nối mạng";
   static const String checkYourInternet = "Hãy kiểm tra kết nối mạng của bạn";
   static const String tryAgain = "Thử lại";
+  static const String typeFilm = "Thể loại";
+  static const String contentFilm = "Nội dung";
+  static const String actor = "Diễn viên";
+  static const String director = "Đạo diễn";
+  static const String timeFilm = "Thời lượng";
 }
 
 class ScreenName {
@@ -52,6 +57,7 @@ class ScreenName {
   static const cartoonScreen = 'CartoonScreen';
   static const tvshowsScreen = 'TvshowsScreen';
   static const favouriteScreen = 'FavouriteScreen';
+  static const playFilmScreen = 'PlayFilmScreen';
 }
 
 class ColorConstants {

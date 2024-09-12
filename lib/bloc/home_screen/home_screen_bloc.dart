@@ -24,6 +24,7 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
     on<ShowSearch>(_onSearching);
     on<SubmitSearch>(_onSubmitSearch);
     on<GoToSeeMoreScreen>(_onGoToSeeMoreScreen);
+    on<GoToPlayFilmScreen>(_onGoToPlayFilmScreen);
   }
 
   Future<void> _onInitHomeScreen(
@@ -187,5 +188,14 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
       );
       NetworkHelper.showToast();
     }
+  }
+
+  void _onGoToPlayFilmScreen(
+      GoToPlayFilmScreen event, Emitter<HomeScreenState> emit) {
+    emit(state.copyWith(isLoading: true));
+    AppNavigatorControllers.moveToPlayFilmScreen(
+      filmSlug: event.filmSLug,
+    );
+    emit(state.copyWith(isLoading: false));
   }
 }

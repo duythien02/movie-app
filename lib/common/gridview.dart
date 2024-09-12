@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:movye/models/film_model.dart';
 
 import '../constants/app_constants.dart';
+import '../route/controllers.dart';
 import 'episode.dart';
 import 'network_image.dart';
 import 'shimmer.dart';
@@ -46,45 +47,52 @@ class MyGridView extends StatelessWidget {
                   if (!canScroll) {
                     urlImg = AppConstants.apiFilmImg + film.posterUrl;
                   }
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Stack(
-                        children: [
-                          SizedBox(
-                            height: 212.sp,
-                            child: MyNetworkImage(
-                              url: urlImg,
-                              radius: BorderRadius.circular(5.sp),
+                  return GestureDetector(
+                    onTap: () {
+                      AppNavigatorControllers.moveToPlayFilmScreen(
+                        filmSlug: film.slug,
+                      );
+                    },
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Stack(
+                          children: [
+                            SizedBox(
+                              height: 212.sp,
+                              child: MyNetworkImage(
+                                url: urlImg,
+                                radius: BorderRadius.circular(5.sp),
+                              ),
                             ),
-                          ),
-                          Positioned.fill(
-                            child: Episode(
-                              titleEp: film.type != 'series'
-                                  ? film.quality ?? ''
-                                  : film.episodeCurrent ?? '',
+                            Positioned.fill(
+                              child: Episode(
+                                titleEp: film.type != 'series'
+                                    ? film.quality ?? ''
+                                    : film.episodeCurrent ?? '',
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 8.sp,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 4.sp,
+                          ],
                         ),
-                        child: Text(
-                          film.name,
-                          style: TextStyle(
-                            fontSize: 14.sp,
-                            color: const Color(ColorConstants.dark),
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 2,
+                        SizedBox(
+                          height: 8.sp,
                         ),
-                      ),
-                    ],
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 4.sp,
+                          ),
+                          child: Text(
+                            film.name,
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              color: const Color(ColorConstants.dark),
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                          ),
+                        ),
+                      ],
+                    ),
                   );
                 },
               )

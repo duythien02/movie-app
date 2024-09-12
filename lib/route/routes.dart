@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../constants/app_constants.dart';
+import '../models/film_model.dart';
 import '../screen/home/cartoon.dart';
 import '../screen/home/newest_film.dart';
 import '../screen/home/series_film.dart';
@@ -8,6 +9,7 @@ import '../screen/home/single_film.dart';
 import '../screen/home/tvshows.dart';
 import '../screen/main_home.dart';
 import '../screen/home/search.dart';
+import '../screen/play_film/play_film.dart';
 import 'route_animation.dart';
 
 class AppNavigatorRoutes {
@@ -42,6 +44,12 @@ class AppNavigatorRoutes {
       case ScreenName.tvshowsScreen:
         return SwipeRight(
           page: const TvshowsScreen(),
+        );
+      case ScreenName.playFilmScreen:
+        return SwipeRight(
+          page: PlayFilmScreen(
+            film: routeSettings.arguments as FilmModel,
+          ),
         );
     }
     return null;
