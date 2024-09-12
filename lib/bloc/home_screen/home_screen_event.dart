@@ -49,3 +49,11 @@ class GoToSeeMoreScreen extends HomeScreenEvent {
   @override
   List<Object> get props => [];
 }
+
+class GoToPlayFilmScreen extends HomeScreenEvent {
+  const GoToPlayFilmScreen({required this.filmSLug});
+  final String filmSLug;
+
+  @override
+  List<Object> get props => [filmSLug];
+}

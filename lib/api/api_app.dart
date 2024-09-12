@@ -144,6 +144,25 @@ class HandleResponseApi {
     }
     return [];
   }
+
+  static Future<FilmModel?> handleApiFilm({required String slug}) async {
+    try {
+      final res = await AppApi.getFilm(slug: slug);
+      if (ApiHelper.isApiResponseSuccess(res)) {
+        final resBody = jsonDecode(res?.body ?? '');
+        var dataFilm = resBody['movie'];
+        List<dynamic> dataEpi = resBody['episodes'];
+        Episodes episode =
+            dataEpi.map((e) => Episodes.fromJson(e)).toList().first;
+        FilmModel film = FilmModel.fromJson(dataFilm, episode);
+        return film;
+      }
+      return null;
+    } catch (e, s) {
+      LogHelper.logCatch(e: e, s: s, tag: 'Get film error');
+    }
+    return null;
+  }
 }
 
 class AppApi {
@@ -180,6 +199,12 @@ class AppApi {
   static Future<Response?> getListFilmSearch(param) async {
     const String url = EndpointApi.getListSearch;
     final response = await ApiFactory.apiInstance.get(url, param);
+    return response;
+  }
+
+  static Future<Response?> getFilm({required String slug}) async {
+    String url = '${EndpointApi.getDetailFilm}/$slug';
+    final response = await ApiFactory.apiInstance.get(url);
     return response;
   }
 }

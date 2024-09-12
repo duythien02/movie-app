@@ -12,6 +12,7 @@ class HomeScreenState extends Equatable {
     this.isExpandCartoon = false,
     this.isExpandTVShows = false,
     this.isSearching = false,
+    this.isLoading = false,
   });
 
   final List<FilmModel>? newestFilmList;
@@ -24,6 +25,7 @@ class HomeScreenState extends Equatable {
   final bool isExpandCartoon;
   final bool isExpandTVShows;
   final bool isSearching;
+  final bool isLoading;
 
   HomeScreenState copyWith({
     List<FilmModel>? newestFilmList,
@@ -36,6 +38,7 @@ class HomeScreenState extends Equatable {
     bool? isExpandCartoon,
     bool? isExpandTVShows,
     bool? isSearching,
+    bool? isLoading,
   }) {
     return HomeScreenState(
       newestFilmList: newestFilmList ?? this.newestFilmList,
@@ -48,6 +51,7 @@ class HomeScreenState extends Equatable {
       isExpandCartoon: isExpandCartoon ?? this.isExpandCartoon,
       isExpandTVShows: isExpandTVShows ?? this.isExpandTVShows,
       isSearching: isSearching ?? this.isSearching,
+      isLoading: isLoading ?? this.isLoading,
     );
   }
 
@@ -63,5 +67,6 @@ class HomeScreenState extends Equatable {
         isExpandCartoon,
         isExpandTVShows,
         isSearching,
+        isLoading,
       ];
 }

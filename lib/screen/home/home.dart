@@ -245,38 +245,46 @@ class _HomeScreenState extends State<HomeScreen>
                       items: state.newestFilmList != null &&
                               state.newestFilmList!.isNotEmpty
                           ? state.newestFilmList?.map((film) {
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    margin: EdgeInsets.symmetric(
-                                      horizontal: 2.sp,
-                                    ),
-                                    width: 143.sp,
-                                    height: 212.sp,
-                                    child: MyNetworkImage(
-                                      url: film.posterUrl,
-                                      radius: BorderRadius.circular(5.sp),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 8.sp,
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 4.sp,
-                                    ),
-                                    child: Text(
-                                      film.name,
-                                      style: TextStyle(
-                                        fontSize: 14.sp,
-                                        color: const Color(ColorConstants.dark),
+                              return GestureDetector(
+                                onTap: () {
+                                  _homeBloc.add(
+                                    GoToPlayFilmScreen(filmSLug: film.slug),
+                                  );
+                                },
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      margin: EdgeInsets.symmetric(
+                                        horizontal: 2.sp,
                                       ),
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 2,
+                                      width: 143.sp,
+                                      height: 212.sp,
+                                      child: MyNetworkImage(
+                                        url: film.posterUrl,
+                                        radius: BorderRadius.circular(5.sp),
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                    SizedBox(
+                                      height: 8.sp,
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 4.sp,
+                                      ),
+                                      child: Text(
+                                        film.name,
+                                        style: TextStyle(
+                                          fontSize: 14.sp,
+                                          color:
+                                              const Color(ColorConstants.dark),
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 2,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               );
                             }).toList()
                           : List.generate(
