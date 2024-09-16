@@ -33,7 +33,7 @@ class ListItem extends StatelessWidget {
                   ),
                 ),
                 Episode(
-                  titleEp: film.type != 'series'
+                  titleEp: film.type == 'single'
                       ? film.quality ?? ''
                       : film.episodeCurrent ?? '',
                 ),

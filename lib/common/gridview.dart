@@ -67,7 +67,7 @@ class MyGridView extends StatelessWidget {
                             ),
                             Positioned.fill(
                               child: Episode(
-                                titleEp: film.type != 'series'
+                                titleEp: film.type == 'single'
                                     ? film.quality ?? ''
                                     : film.episodeCurrent ?? '',
                               ),
