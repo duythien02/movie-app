@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../api/api_app.dart';
 import '../constants/app_constants.dart';
 import '../services/app_manage.dart';
 
@@ -49,11 +48,9 @@ class AppNavigatorControllers {
   }
 
   static Future? moveToPlayFilmScreen({required String filmSlug}) async {
-    await HandleResponseApi.handleApiFilm(slug: filmSlug).then(
-      (value) => AppManage.mainNavigatorService.pushNamed(
-        ScreenName.playFilmScreen,
-        arguments: value,
-      ),
+    AppManage.mainNavigatorService.pushNamed(
+      ScreenName.playFilmScreen,
+      arguments: filmSlug,
     );
   }
 }

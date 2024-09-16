@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../constants/app_constants.dart';
-import '../models/film_model.dart';
 import '../screen/home/cartoon.dart';
 import '../screen/home/newest_film.dart';
 import '../screen/home/series_film.dart';
@@ -48,7 +47,7 @@ class AppNavigatorRoutes {
       case ScreenName.playFilmScreen:
         return SwipeRight(
           page: PlayFilmScreen(
-            film: routeSettings.arguments as FilmModel,
+            filmSlug: routeSettings.arguments as String,
           ),
         );
     }

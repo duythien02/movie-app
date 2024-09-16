@@ -8,16 +8,17 @@ class PlayFilmScreenEvent extends Equatable {
 }
 
 class InitPlayFilmScreen extends PlayFilmScreenEvent {
-  const InitPlayFilmScreen({required this.film});
-  final FilmModel film;
+  const InitPlayFilmScreen({required this.filmSlug});
+  final String filmSlug;
 
   @override
-  List<Object> get props => [film];
+  List<Object> get props => [filmSlug];
 }
 
-class ExpandContent extends PlayFilmScreenEvent {
-  const ExpandContent();
+class ChangeEpisode extends PlayFilmScreenEvent {
+  const ChangeEpisode({required this.currentEp});
+  final int currentEp;
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [currentEp];
 }
