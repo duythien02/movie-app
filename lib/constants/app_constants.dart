@@ -43,8 +43,7 @@ class StringConstants {
   static const String typeFilm = "Thể loại";
   static const String contentFilm = "Nội dung";
   static const String actor = "Diễn viên";
-  static const String director = "Đạo diễn";
-  static const String timeFilm = "Thời lượng";
+  static const String listEpi = "Danh sách tập";
 }
 
 class ScreenName {

@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:movye/models/film_model.dart';
-import 'package:pod_player/pod_player.dart';
+import 'package:readmore/readmore.dart';
 
 import '../../bloc/play_film_screen/play_film_screen_bloc.dart';
 import '../../common/loading.dart';
 import '../../constants/app_constants.dart';
+import 'video_film.dart';
 
 class PlayFilmScreen extends StatefulWidget {
-  const PlayFilmScreen({super.key, required this.film});
+  const PlayFilmScreen({super.key, required this.filmSlug});
 
-  final FilmModel film;
+  final String filmSlug;
 
   @override
   State<PlayFilmScreen> createState() => _PlayFilmScreenState();
@@ -23,76 +23,30 @@ class _PlayFilmScreenState extends State<PlayFilmScreen> {
   @override
   void initState() {
     super.initState();
-    _playFilmBloc.add(InitPlayFilmScreen(film: widget.film));
+    _playFilmBloc.add(InitPlayFilmScreen(filmSlug: widget.filmSlug));
   }
 
   @override
   void dispose() {
-    _playFilmBloc.videoController.dispose();
     _playFilmBloc.close();
     super.dispose();
   }
 
-  Widget infoFilm({
-    required String label,
-    List<dynamic>? listInfo,
-    String? content,
+  Widget tagFilm({
+    required String tag,
   }) {
-    String text = "";
-    if (listInfo != null) {
-      text = listInfo
-          .map((e) {
-            if (e is Category) {
-              return e.name;
-            } else {
-              return e;
-            }
-          })
-          .join(', ')
-          .toString();
-    } else {
-      text = content ?? '';
-    }
-    return RichText(
-      text: TextSpan(
-        text: '$label: ',
+    return Container(
+      padding: EdgeInsets.all(4.sp),
+      decoration: BoxDecoration(
+        color: const Color(ColorConstants.lightOrange),
+        borderRadius: BorderRadius.circular(4.sp),
+      ),
+      child: Text(
+        tag,
         style: TextStyle(
-          fontSize: 16.sp,
-          color: const Color(ColorConstants.dark),
-          fontWeight: FontWeight.bold,
+          fontSize: 15.sp,
+          color: const Color(ColorConstants.gray),
         ),
-        children: listInfo != null
-            ? List.generate(
-                listInfo.length,
-                (index) {
-                  if (index == listInfo.length - 1) {
-                    return TextSpan(
-                      text: listInfo[index] is Category
-                          ? '${listInfo[index].name}.'
-                          : '${listInfo[index]}.',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.normal,
-                      ),
-                    );
-                  }
-                  return TextSpan(
-                    text: listInfo[index] is Category
-                        ? '${listInfo[index].name}, '
-                        : '${listInfo[index]}, ',
-                    style: const TextStyle(
-                      fontWeight: FontWeight.normal,
-                    ),
-                  );
-                },
-              )
-            : [
-                TextSpan(
-                  text: text,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.normal,
-                  ),
-                ),
-              ],
       ),
     );
   }
@@ -109,118 +63,319 @@ class _PlayFilmScreenState extends State<PlayFilmScreen> {
               child: state.isLoading
                   ? const Center(child: Loading())
                   : Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        AspectRatio(
-                          aspectRatio: 16 / 9,
-                          child: PodVideoPlayer(
-                            controller: _playFilmBloc.videoController,
-                          ),
+                        VideoFilm(
+                          bloc: _playFilmBloc,
+                          urlVideo: state.film?.episodes[0]
+                                  .serverData[state.currentEp].linkM3u8 ??
+                              '',
                         ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16.sp),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                height: 16.sp,
-                              ),
-                              Text(
-                                widget.film.name,
-                                style: TextStyle(
-                                  fontSize: 24.sp,
-                                  fontWeight: FontWeight.bold,
-                                  color: const Color(ColorConstants.dark),
+                        Expanded(
+                          child: SingleChildScrollView(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 16.sp,
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      SizedBox(
+                                        height: 16.sp,
+                                      ),
+                                      Text(
+                                        state.film?.name ?? '',
+                                        style: TextStyle(
+                                          fontSize: 24.sp,
+                                          fontWeight: FontWeight.bold,
+                                          color:
+                                              const Color(ColorConstants.dark),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 8.sp,
+                                      ),
+                                      Wrap(
+                                        spacing: 8.sp,
+                                        runSpacing: 8.sp,
+                                        children: [
+                                          tagFilm(
+                                            tag: state.film?.year.toString() ??
+                                                '',
+                                          ),
+                                          tagFilm(
+                                            tag: state.film?.lang ?? '',
+                                          ),
+                                          tagFilm(
+                                            tag: state.film?.country!.first
+                                                    .name ??
+                                                '',
+                                          ),
+                                          tagFilm(
+                                            tag: state.film?.type == 'series'
+                                                ? StringConstants.series
+                                                : StringConstants.singleFilm,
+                                          ),
+                                          tagFilm(
+                                              tag: state.film?.quality ?? '')
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 8.sp,
+                                      ),
+                                      ReadMoreText(
+                                        state.film?.content ?? '',
+                                        trimMode: TrimMode.Line,
+                                        trimLines: 2,
+                                        trimCollapsedText:
+                                            StringConstants.sliderSeeMore,
+                                        trimExpandedText:
+                                            StringConstants.zoomOut,
+                                        moreStyle: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        lessStyle: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        style: TextStyle(
+                                          fontSize: 16.sp,
+                                          color: const Color(
+                                            ColorConstants.dark,
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 8.sp,
+                                      ),
+                                      RichText(
+                                        text: TextSpan(
+                                          text: 'Thể loại: ',
+                                          style: TextStyle(
+                                            fontSize: 16.sp,
+                                            color: const Color(
+                                                ColorConstants.dark),
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                          children: List.generate(
+                                            state.film?.category!.length ?? 0,
+                                            (index) {
+                                              if (index ==
+                                                  state.film!.category!.length -
+                                                      1) {
+                                                return TextSpan(
+                                                  text:
+                                                      '${state.film!.category![index].name}.',
+                                                  style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.normal,
+                                                  ),
+                                                );
+                                              }
+                                              return TextSpan(
+                                                text:
+                                                    '${state.film!.category![index].name}, ',
+                                                style: const TextStyle(
+                                                  fontWeight: FontWeight.normal,
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              SizedBox(
-                                height: 8.sp,
-                              ),
-                              IntrinsicHeight(
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      '${widget.film.year}',
-                                      style: TextStyle(
-                                        fontSize: 16.sp,
-                                        color: const Color(ColorConstants.gray),
-                                      ),
-                                    ),
-                                    VerticalDivider(
-                                      color: const Color(ColorConstants.dark),
-                                      thickness: 1.sp,
-                                    ),
-                                    Text(
-                                      '${widget.film.lang}',
-                                      style: TextStyle(
-                                        fontSize: 16.sp,
-                                        color: const Color(ColorConstants.gray),
-                                      ),
-                                    ),
-                                    VerticalDivider(
-                                      color: const Color(ColorConstants.dark),
-                                      thickness: 1.sp,
-                                    ),
-                                    Text(
-                                      widget.film.country!.first.name,
-                                      style: TextStyle(
-                                        fontSize: 16.sp,
-                                        color: const Color(ColorConstants.gray),
-                                      ),
-                                    ),
-                                    VerticalDivider(
-                                      color: const Color(ColorConstants.dark),
-                                      thickness: 1.sp,
-                                    ),
-                                    Text(
-                                      widget.film.type == 'series'
-                                          ? StringConstants.series
-                                          : StringConstants.singleFilm,
-                                      style: TextStyle(
-                                        fontSize: 16.sp,
-                                        color: const Color(ColorConstants.gray),
-                                      ),
-                                    ),
-                                  ],
+                                SizedBox(
+                                  height: 10.sp,
                                 ),
-                              ),
-                              SizedBox(
-                                height: 8.sp,
-                              ),
-                              infoFilm(
-                                label: StringConstants.typeFilm,
-                                listInfo: widget.film.category!,
-                              ),
-                              SizedBox(
-                                height: 8.sp,
-                              ),
-                              infoFilm(
-                                label: StringConstants.timeFilm,
-                                content: widget.film.time,
-                              ),
-                              SizedBox(
-                                height: 8.sp,
-                              ),
-                              infoFilm(
-                                label: StringConstants.contentFilm,
-                                content: widget.film.content,
-                              ),
-                              SizedBox(
-                                height: 8.sp,
-                              ),
-                              infoFilm(
-                                label: StringConstants.director,
-                                listInfo: widget.film.director!,
-                              ),
-                              SizedBox(
-                                height: 8.sp,
-                              ),
-                              infoFilm(
-                                label: StringConstants.actor,
-                                listInfo: widget.film.actor!,
-                              ),
-                            ],
+                                SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Row(
+                                    children: [
+                                      SizedBox(width: 16.sp),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: List.generate(
+                                          state.film!.actor!.length,
+                                          (index) {
+                                            return IntrinsicHeight(
+                                              child: Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  CircleAvatar(
+                                                    backgroundColor:
+                                                        const Color(
+                                                      ColorConstants
+                                                          .lightOrange,
+                                                    ),
+                                                    radius: 28.sp,
+                                                    child: Icon(
+                                                      Icons.person,
+                                                      size: 35.sp,
+                                                    ),
+                                                  ),
+                                                  SizedBox(width: 8.sp),
+                                                  Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceEvenly,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      SizedBox(
+                                                        width: 74.sp,
+                                                        child: Text(
+                                                          state.film!
+                                                              .actor![index],
+                                                          style: TextStyle(
+                                                            fontSize: 13.sp,
+                                                            color: const Color(
+                                                              ColorConstants
+                                                                  .dark,
+                                                            ),
+                                                          ),
+                                                          maxLines: 2,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        StringConstants.actor,
+                                                        style: TextStyle(
+                                                          fontSize: 13.sp,
+                                                          color: const Color(
+                                                            ColorConstants.dark,
+                                                          ),
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  SizedBox(width: 4.sp),
+                                                ],
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                      SizedBox(width: 16.sp),
+                                    ],
+                                  ),
+                                ),
+                                if (state.film!.episodes[0].serverData.length >
+                                    1) ...[
+                                  SizedBox(
+                                    height: 8.sp,
+                                  ),
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 16.sp),
+                                    child: Text(
+                                      StringConstants.listEpi,
+                                      style: TextStyle(
+                                        fontSize: 16.sp,
+                                        color: const Color(
+                                          ColorConstants.dark,
+                                        ),
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 8.sp,
+                                  ),
+                                  SingleChildScrollView(
+                                    scrollDirection: Axis.horizontal,
+                                    child: Row(
+                                      children: [
+                                        SizedBox(
+                                          width: 16.sp,
+                                        ),
+                                        Row(
+                                          children: List.generate(
+                                            state.film!.episodes[0].serverData
+                                                .length,
+                                            (index) {
+                                              final episode = state
+                                                  .film!
+                                                  .episodes[0]
+                                                  .serverData[index];
+                                              return GestureDetector(
+                                                onTap: () {
+                                                  _playFilmBloc.add(
+                                                      ChangeEpisode(
+                                                          currentEp: index));
+                                                },
+                                                child: Container(
+                                                  alignment: Alignment.center,
+                                                  padding: EdgeInsets.all(4.sp),
+                                                  width: 64.sp,
+                                                  height: 44.sp,
+                                                  margin: EdgeInsets.only(
+                                                    right: index !=
+                                                            state
+                                                                    .film!
+                                                                    .episodes[0]
+                                                                    .serverData
+                                                                    .length -
+                                                                1
+                                                        ? 8.sp
+                                                        : 0.sp,
+                                                  ),
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                      8.sp,
+                                                    ),
+                                                    color: const Color(
+                                                      ColorConstants
+                                                          .lightOrange,
+                                                    ),
+                                                  ),
+                                                  child: Text(
+                                                    episode.name,
+                                                    style: TextStyle(
+                                                      fontSize: 12.sp,
+                                                      color: state.currentEp ==
+                                                              index
+                                                          ? const Color(
+                                                              ColorConstants
+                                                                  .primaryOrange,
+                                                            )
+                                                          : const Color(
+                                                              ColorConstants
+                                                                  .dark,
+                                                            ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 16.sp,
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                ],
+                                SizedBox(
+                                  height: 24.sp,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ],

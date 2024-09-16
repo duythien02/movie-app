@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../bloc/tvshows/tvshows_screen_bloc.dart';
+import '../../bloc/tvshows_screen/tvshows_screen_bloc.dart';
 import '../../common/appbar.dart';
 import '../../common/list_film.dart';
 import '../../constants/app_constants.dart';
